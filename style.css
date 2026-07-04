@@ -97,16 +97,6 @@ header {
   left: 50%;
   transform: translateX(-50%);
 }
-.header-nav a {
-  color: var(--text2);
-  font-size: 13px;
-  font-weight: 500;
-  padding: 6px 10px;
-  border-radius: 6px;
-  transition: background 0.2s, color 0.2s;
-  white-space: nowrap;
-}
-.header-nav a:hover { background: var(--bg3); color: var(--text); text-decoration: none; }
 
 /* アクションボタン：右端 */
 .header-actions {
@@ -406,7 +396,7 @@ main {
   padding: 76px 24px 60px;
 }
 
-section { margin-bottom: 72px; }
+section { margin-bottom: 72px; scroll-margin-top: 84px; }
 
 h2 { font-size: 22px; font-weight: 700; margin-bottom: 8px; }
 .section-desc { color: var(--text2); font-size: 13px; margin-bottom: 28px; }
