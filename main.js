@@ -94,7 +94,7 @@ function renderProjects(projects) {
     return open + `
       <div class="thumb">
         ${p.thumbnail
-          ? `<img src="${esc(p.thumbnail)}" alt="${esc(p.title)}" loading="lazy">`
+          ? `<img src="${esc(p.thumbnail)}" alt="${esc(p.title)}" loading="lazy" onerror="this.parentElement.innerHTML='<div class=&quot;no-img&quot;>No Image</div>'">`
           : `<div class="no-img">No Image</div>`}
       </div>
       <div class="info">
@@ -117,7 +117,7 @@ function renderArticles(articles) {
     return `<a class="article-card article-card--link" href="#article/${a.id}">
       <div class="thumb">
         ${a.thumbnail
-          ? `<img src="${esc(a.thumbnail)}" alt="${esc(a.title)}" loading="lazy">`
+          ? `<img src="${esc(a.thumbnail)}" alt="${esc(a.title)}" loading="lazy" onerror="this.parentElement.innerHTML='<div class=&quot;no-img&quot;>No Image</div>'">`
           : `<div class="no-img">No Image</div>`}
       </div>
       <div class="info">
@@ -208,12 +208,16 @@ function renderSearchResults(projects, articles) {
   }
   searchResults.innerHTML = items.map(item => {
     const href = item._type === 'article'
-      ? (item.url || '#')
+      ? `#article/${item.id}`
       : (item.links?.project || item.links?.github || '#');
+    const hasLink = item._type === 'article' || href !== '#';
+    const isExternal = item._type !== 'article' && href !== '#';
+    const tag = hasLink ? 'a' : 'div';
+    const attrs = hasLink ? `href="${esc(href)}" ${isExternal ? 'target="_blank" rel="noopener"' : ''}` : '';
     return `
-      <a class="search-result-item" href="${esc(href)}" target="${href !== '#' ? '_blank' : '_self'}" rel="noopener">
+      <${tag} class="search-result-item" ${attrs}>
         <div class="search-result-thumb">
-          ${item.thumbnail ? `<img src="${esc(item.thumbnail)}" alt="${esc(item.title)}">` : 'No Image'}
+          ${item.thumbnail ? `<img src="${esc(item.thumbnail)}" alt="${esc(item.title)}" onerror="this.parentElement.textContent='No Image'">` : 'No Image'}
         </div>
         <div class="search-result-info">
           <div class="search-result-title">
@@ -226,7 +230,7 @@ function renderSearchResults(projects, articles) {
             ${(item.tags || []).map(t => `<span class="tag">${esc(t)}</span>`).join('')}
           </div>
         </div>
-      </a>
+      </${tag}>
     `;
   }).join('');
 }
