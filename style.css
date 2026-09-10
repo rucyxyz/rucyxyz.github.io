@@ -89,14 +89,31 @@ header {
 .hamburger.open span:nth-child(2) { opacity: 0; }
 .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
 
-/* ナビ：中央配置 */
+/* ナビ：flexで中央寄せ（重なり解消） */
 .header-nav {
   display: flex;
   gap: 0;
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
+  flex: 1;
+  justify-content: center;
+  align-items: center;
+  min-width: 0;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
+.header-nav::-webkit-scrollbar { display: none; }
+
+/* ナビリンク：白・太字 */
+.header-nav a {
+  color: var(--text);
+  font-size: 13px;
+  font-weight: 600;
+  padding: 6px 7px;
+  border-radius: 6px;
+  transition: background 0.2s, color 0.2s;
+  white-space: nowrap;
+}
+.header-nav a:hover { background: var(--bg3); text-decoration: none; }
 
 /* アクションボタン：右端 */
 .header-actions {
@@ -122,22 +139,6 @@ header {
   font-size: 20px;
 }
 .icon-btn:hover { background: var(--bg3); color: var(--text); }
-
-/* ① ナビリンク：白・太字 */
-.header-nav {
-  display: flex;
-  gap: 0;
-}
-.header-nav a {
-  color: var(--text);
-  font-size: 13px;
-  font-weight: 600;
-  padding: 6px 7px;
-  border-radius: 6px;
-  transition: background 0.2s, color 0.2s;
-  white-space: nowrap;
-}
-.header-nav a:hover { background: var(--bg3); text-decoration: none; }
 
 .search-overlay {
   position: fixed;
@@ -944,13 +945,6 @@ footer {
 }
 
 @media (max-width: 640px) {
-  .header-nav {
-    overflow-x: auto;
-    scrollbar-width: none;
-    flex-shrink: 1;
-    min-width: 0;
-  }
-  .header-nav::-webkit-scrollbar { display: none; }
   .header-nav a {
     font-size: 12px;
     padding: 6px 7px;
