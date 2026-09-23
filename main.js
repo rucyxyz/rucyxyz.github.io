@@ -6,6 +6,9 @@ function esc(str) {
     .replace(/"/g, '&quot;');
 }
 
+/* ============================================================
+   Drawer
+   ============================================================ */
 const hamburger     = document.getElementById('hamburger');
 const drawer        = document.getElementById('drawer');
 const drawerOverlay = document.getElementById('drawerOverlay');
@@ -33,6 +36,9 @@ document.querySelectorAll('.drawer-nav a').forEach(a =>
   a.addEventListener('click', closeDrawer)
 );
 
+/* ============================================================
+   Theme
+   ============================================================ */
 const themeBtn  = document.getElementById('themeBtn');
 const themeIcon = document.getElementById('themeIcon');
 
@@ -49,6 +55,9 @@ themeBtn.addEventListener('click', () => {
   applyTheme(current === 'dark' ? 'light' : 'dark');
 });
 
+/* ============================================================
+   Data
+   ============================================================ */
 function formatDate(dateStr) {
   if (!dateStr) return '';
   const d = new Date(dateStr);
@@ -81,6 +90,10 @@ async function loadArticles() {
       '<p style="color:var(--text2);font-size:14px;">記事を読み込めませんでした。</p>';
   }
 }
+
+/* ============================================================
+   Render
+   ============================================================ */
 function renderProjects(projects) {
   const grid = document.getElementById('projectGrid');
   if (!projects.length) {
@@ -121,7 +134,7 @@ function renderArticles(articles) {
           : `<div class="no-img">No Image</div>`}
       </div>
       <div class="info">
-        <div class="article-badge">Article</div>
+        <div class="article-badge">Blog</div>
         <h3>${esc(a.title)}</h3>
         ${a.date ? `<div class="project-date"><span class="material-icons">calendar_today</span>${formatDate(a.date)}</div>` : ''}
         <p>${esc(a.description)}</p>
@@ -131,6 +144,9 @@ function renderArticles(articles) {
   }).join('');
 }
 
+/* ============================================================
+   Search
+   ============================================================ */
 const searchBtn      = document.getElementById('searchBtn');
 const searchOverlay  = document.getElementById('searchOverlay');
 const searchInput    = document.getElementById('searchInput');
@@ -221,7 +237,7 @@ function renderSearchResults(projects, articles) {
         </div>
         <div class="search-result-info">
           <div class="search-result-title">
-            <span class="search-type-badge search-type-${item._type}">${item._type === 'project' ? 'Project' : 'Article'}</span>
+            <span class="search-type-badge search-type-${item._type}">${item._type === 'project' ? 'Project' : 'Blog'}</span>
             ${esc(item.title)}
           </div>
           ${item.date ? `<div class="search-result-date">${formatDate(item.date)}</div>` : ''}
@@ -235,6 +251,9 @@ function renderSearchResults(projects, articles) {
   }).join('');
 }
 
+/* ============================================================
+   Skills animation
+   ============================================================ */
 const skillObserver = new IntersectionObserver((entries) => {
   entries.forEach(entry => {
     if (entry.isIntersecting) {
@@ -248,6 +267,9 @@ const skillObserver = new IntersectionObserver((entries) => {
 
 document.querySelectorAll('.skill-category, .skill-category-card').forEach(el => skillObserver.observe(el));
 
+/* ============================================================
+   Fade-in
+   ============================================================ */
 const fadeObserver = new IntersectionObserver(entries => {
   entries.forEach(e => {
     if (e.isIntersecting) {
@@ -259,10 +281,15 @@ const fadeObserver = new IntersectionObserver(entries => {
 
 document.querySelectorAll('.fade-in').forEach(el => fadeObserver.observe(el));
 
+/* ============================================================
+   Boot
+   ============================================================ */
 loadProjects();
 loadArticles().then(() => router());
 
-/* ===== HASH ROUTER ===== */
+/* ============================================================
+   Hash Router (blog detail)
+   ============================================================ */
 const articleOverlay = document.getElementById('articleOverlay');
 const articleClose   = document.getElementById('articleClose');
 
@@ -297,6 +324,9 @@ window.addEventListener('hashchange', router);
 articleClose.addEventListener('click', () => { history.pushState('', '', ' '); closeArticle(); });
 articleOverlay.addEventListener('click', e => { if (e.target === articleOverlay) { history.pushState('', '', ' '); closeArticle(); } });
 
+/* ============================================================
+   Drawer accordions / filters
+   ============================================================ */
 const archiveToggle = document.getElementById('archiveToggle');
 const archivePanel  = document.getElementById('archivePanel');
 const categoryToggle = document.getElementById('categoryToggle');
@@ -328,10 +358,13 @@ document.querySelectorAll('.drawer-panel-item').forEach(item => {
       renderArticles(filtered);
     }
 
-    document.getElementById('articles').scrollIntoView({ behavior: 'smooth' });
+    document.getElementById('blog').scrollIntoView({ behavior: 'smooth' });
   });
 });
 
+/* ============================================================
+   GitHub stats / commit graph
+   ============================================================ */
 async function loadGitHubStats() {
   try {
     const cached = sessionStorage.getItem('gh_stats');
