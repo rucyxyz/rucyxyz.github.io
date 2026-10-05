@@ -71,7 +71,6 @@ header {
   transition: background 0.3s, border-color 0.3s;
 }
 
-/* ハンバーガー */
 .hamburger {
   display: flex;
   flex-direction: column;
@@ -100,7 +99,6 @@ header {
 .hamburger.open span:nth-child(2) { opacity: 0; }
 .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
 
-/* ナビ */
 .header-nav {
   display: flex;
   gap: 0;
@@ -125,7 +123,6 @@ header {
 }
 .header-nav a:hover { background: var(--hover); text-decoration: none; }
 
-/* ヘッダー右側 */
 .header-actions {
   display: flex;
   align-items: center;
@@ -276,7 +273,7 @@ header {
 .search-empty { text-align: center; padding: 40px 20px; color: var(--text2); font-size: 14px; }
 
 /* ============================================================
-   Drawer（HTMLは変更なし・CSSのみ新パレット適用）
+   Drawer
    ============================================================ */
 .drawer-overlay {
   position: fixed;
@@ -483,7 +480,7 @@ h2 { font-size: 22px; font-weight: 700; margin-bottom: 8px; letter-spacing: -0.0
 .hero-bio { color: var(--text2); font-size: 14px; line-height: 1.7; }
 
 /* ============================================================
-   SNS — ブランドカラー背景＋白アイコン（仕様通りブランド色は許可）
+   SNS — モノクロ統一・ホバーでブランド色
    ============================================================ */
 .links-row {
   display: flex;
@@ -497,23 +494,34 @@ h2 { font-size: 22px; font-weight: 700; margin-bottom: 8px; letter-spacing: -0.0
   width: 44px;
   height: 44px;
   border-radius: 50%;
-  color: #fff;
-  transition: transform 0.15s, box-shadow 0.15s, opacity 0.15s;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  color: var(--text2);
+  transition: transform 0.15s, color 0.15s, background 0.15s, border-color 0.15s;
   text-decoration: none;
   padding: 0;
 }
-.sns-btn:hover { transform: scale(1.06); box-shadow: 0 6px 20px rgba(0,0,0,0.35); }
-.sns-btn svg { width: 22px; height: 22px; display: block; }
+.sns-btn:hover { transform: scale(1.06); color: #fff; border-color: transparent; }
+.sns-btn svg { width: 20px; height: 20px; display: block; }
 .sns-btn span { display: none; }
 
-.sns-github     { background: #181717; }
-.sns-twitter    { background: #000; }
-.sns-soundcloud { background: #ff5500; }
-.sns-spotify    { background: #1db954; }
-.sns-note       { background: #2cb696; }
-.sns-discord    { background: #5865F2; }
-.sns-telegram   { background: #229ED9; }
-.sns-tiktok     { background: #000; }
+/* ホバー時のみブランド色 */
+.sns-github:hover     { background: #181717; }
+.sns-twitter:hover    { background: #000; }
+.sns-soundcloud:hover { background: #ff5500; }
+.sns-spotify:hover    { background: #1db954; }
+.sns-note:hover       { background: #2cb696; }
+.sns-discord:hover    { background: #5865F2; }
+.sns-telegram:hover   { background: #229ED9; }
+.sns-tiktok:hover     { background: #000; }
+
+/* ライトテーマ */
+:root[data-theme="light"] .sns-btn {
+  background: #F5F5F5;
+  border-color: #E5E5E5;
+  color: #666;
+}
+:root[data-theme="light"] .sns-btn:hover { color: #fff; }
 
 /* ============================================================
    Profile cards
@@ -1021,45 +1029,4 @@ footer {
   align-items: center;
   gap: 5px;
   font-size: 13px;
-  color: var(--text2);
-}
-.article-detail-date .material-icons { font-size: 14px; }
-
-.article-detail-body h1 {
-  font-size: 26px;
-  font-weight: 700;
-  line-height: 1.4;
-  margin-bottom: 32px;
-  color: var(--text);
-}
-
-.article-detail-content h2 {
-  font-size: 20px;
-  font-weight: 700;
-  margin: 36px 0 12px;
-  padding-bottom: 8px;
-  border-bottom: 1px solid var(--border);
-  color: var(--text);
-}
-.article-detail-content h3 {
-  font-size: 16px;
-  font-weight: 700;
-  margin: 28px 0 8px;
-  color: var(--text);
-}
-.article-detail-content p {
-  font-size: 15px;
-  color: var(--text2);
-  line-height: 1.9;
-  margin-bottom: 16px;
-}
-.article-detail-content ul,
-.article-detail-content ol {
-  padding-left: 20px;
-  margin-bottom: 16px;
-}
-.article-detail-content li {
-  font-size: 15px;
-  color: var(--text2);
-  line-height: 1.9;
-}
+  color: var(--text
