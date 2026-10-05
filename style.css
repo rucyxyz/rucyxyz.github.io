@@ -1017,4 +1017,49 @@ footer {
   margin-bottom: 16px;
 }
 .article-detail-date {
-  display: inline-flex
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 13px;
+  color: var(--text2);
+}
+.article-detail-date .material-icons { font-size: 14px; }
+
+.article-detail-body h1 {
+  font-size: 26px;
+  font-weight: 700;
+  line-height: 1.4;
+  margin-bottom: 32px;
+  color: var(--text);
+}
+
+.article-detail-content h2 {
+  font-size: 20px;
+  font-weight: 700;
+  margin: 36px 0 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+  color: var(--text);
+}
+.article-detail-content h3 {
+  font-size: 16px;
+  font-weight: 700;
+  margin: 28px 0 8px;
+  color: var(--text);
+}
+.article-detail-content p {
+  font-size: 15px;
+  color: var(--text2);
+  line-height: 1.9;
+  margin-bottom: 16px;
+}
+.article-detail-content ul,
+.article-detail-content ol {
+  padding-left: 20px;
+  margin-bottom: 16px;
+}
+.article-detail-content li {
+  font-size: 15px;
+  color: var(--text2);
+  line-height: 1.9;
+}
