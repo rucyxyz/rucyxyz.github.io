@@ -92,7 +92,7 @@ async function loadArticles() {
 }
 
 /* ============================================================
-   Render
+   Render — サムネなし
    ============================================================ */
 function renderProjects(projects) {
   const grid = document.getElementById('projectGrid');
@@ -105,11 +105,6 @@ function renderProjects(projects) {
     const open = href ? `<a class="project-card project-card--link" href="${href}" target="_blank" rel="noopener">` : '<div class="project-card">';
     const close = href ? '</a>' : '</div>';
     return open + `
-      <div class="thumb">
-        ${p.thumbnail
-          ? `<img src="${esc(p.thumbnail)}" alt="${esc(p.title)}" loading="lazy" onerror="this.parentElement.innerHTML='<div class=&quot;no-img&quot;>No Image</div>'">`
-          : `<div class="no-img">No Image</div>`}
-      </div>
       <div class="info">
         <h3>${esc(p.title)}</h3>
         ${p.date ? `<div class="project-date"><span class="material-icons">calendar_today</span>${formatDate(p.date)}</div>` : ''}
@@ -128,11 +123,6 @@ function renderArticles(articles) {
   }
   grid.innerHTML = articles.map(a => {
     return `<a class="article-card article-card--link" href="#article/${a.id}">
-      <div class="thumb">
-        ${a.thumbnail
-          ? `<img src="${esc(a.thumbnail)}" alt="${esc(a.title)}" loading="lazy" onerror="this.parentElement.innerHTML='<div class=&quot;no-img&quot;>No Image</div>'">`
-          : `<div class="no-img">No Image</div>`}
-      </div>
       <div class="info">
         <div class="article-badge">Blog</div>
         <h3>${esc(a.title)}</h3>
@@ -232,9 +222,6 @@ function renderSearchResults(projects, articles) {
     const attrs = hasLink ? `href="${esc(href)}" ${isExternal ? 'target="_blank" rel="noopener"' : ''}` : '';
     return `
       <${tag} class="search-result-item" ${attrs}>
-        <div class="search-result-thumb">
-          ${item.thumbnail ? `<img src="${esc(item.thumbnail)}" alt="${esc(item.title)}" onerror="this.parentElement.textContent='No Image'">` : 'No Image'}
-        </div>
         <div class="search-result-info">
           <div class="search-result-title">
             <span class="search-type-badge search-type-${item._type}">${item._type === 'project' ? 'Project' : 'Blog'}</span>
@@ -361,128 +348,3 @@ document.querySelectorAll('.drawer-panel-item').forEach(item => {
     document.getElementById('blog').scrollIntoView({ behavior: 'smooth' });
   });
 });
-
-/* ============================================================
-   GitHub stats / commit graph
-   ============================================================ */
-async function loadGitHubStats() {
-  try {
-    const cached = sessionStorage.getItem('gh_stats');
-    if (cached) {
-      const { followers, repos, stars } = JSON.parse(cached);
-      document.getElementById('ghFollowers').textContent = followers;
-      document.getElementById('ghRepos').textContent     = repos;
-      document.getElementById('ghStars').textContent     = stars;
-      return;
-    }
-    const [userRes, reposRes] = await Promise.all([
-      fetch('https://api.github.com/users/tls-client'),
-      fetch('https://api.github.com/users/tls-client/repos?per_page=100')
-    ]);
-    const user  = await userRes.json();
-    const repos = await reposRes.json();
-
-    const followers = user.followers ?? '—';
-    const repoCount = user.public_repos ?? '—';
-    const stars = Array.isArray(repos)
-      ? repos.reduce((sum, r) => sum + r.stargazers_count, 0)
-      : 0;
-
-    document.getElementById('ghFollowers').textContent = followers;
-    document.getElementById('ghRepos').textContent     = repoCount;
-    document.getElementById('ghStars').textContent     = stars;
-
-    sessionStorage.setItem('gh_stats', JSON.stringify({ followers, repos: repoCount, stars }));
-  } catch(e) {}
-}
-
-async function loadCommitGraph() {
-  try {
-    const cached = sessionStorage.getItem('gh_commits');
-    if (cached) {
-      const { counts, total, maxDay, lastDay } = JSON.parse(cached);
-      document.getElementById('ghCommitsSub').textContent   = `Last 30 days · Max/day ${maxDay}`;
-      document.getElementById('ghTotalCommits').textContent = `${total} commits total`;
-      document.getElementById('ghLastDay').textContent      = `Last day ${lastDay} commits`;
-      drawCommitChart(counts);
-      return;
-    }
-    const res   = await fetch('https://api.github.com/users/tls-client/repos?per_page=100');
-    const repos = await res.json();
-    if (!Array.isArray(repos)) return;
-
-    const days = 30;
-    const counts = new Array(days).fill(0);
-    const now = Date.now();
-
-    await Promise.all(repos.slice(0, 10).map(async repo => {
-      try {
-        const r = await fetch(`https://api.github.com/repos/tls-client/${repo.name}/commits?per_page=100&since=${new Date(now - days*86400000).toISOString()}`);
-        const commits = await r.json();
-        if (!Array.isArray(commits)) return;
-        commits.forEach(c => {
-          const date = new Date(c.commit.author.date);
-          const diffDays = Math.floor((now - date.getTime()) / 86400000);
-          if (diffDays >= 0 && diffDays < days) counts[days - 1 - diffDays]++;
-        });
-      } catch(e) {}
-    }));
-
-    const total = counts.reduce((a,b) => a+b, 0);
-    const maxDay = Math.max(...counts);
-    const lastDay = counts[counts.length - 1];
-
-    document.getElementById('ghCommitsSub').textContent   = `Last ${days} days · Max/day ${maxDay}`;
-    document.getElementById('ghTotalCommits').textContent = `${total} commits total`;
-    document.getElementById('ghLastDay').textContent      = `Last day ${lastDay} commits`;
-
-    sessionStorage.setItem('gh_commits', JSON.stringify({ counts, total, maxDay, lastDay }));
-    drawCommitChart(counts);
-  } catch(e) {}
-}
-
-function drawCommitChart(counts) {
-  const canvas = document.getElementById('commitChart');
-  if (!canvas) return;
-  const ctx = canvas.getContext('2d');
-  const w = canvas.offsetWidth || 700;
-  const h = 100;
-  canvas.width  = w;
-  canvas.height = h;
-
-  const max = Math.max(...counts, 1);
-  const pad = 4;
-  const step = (w - pad * 2) / (counts.length - 1);
-
-  ctx.clearRect(0, 0, w, h);
-
-  const grad = ctx.createLinearGradient(0, 0, 0, h);
-  grad.addColorStop(0, 'rgba(41,212,120,0.35)');
-  grad.addColorStop(1, 'rgba(41,212,120,0)');
-
-  ctx.beginPath();
-  counts.forEach((v, i) => {
-    const x = pad + i * step;
-    const y = h - pad - (v / max) * (h - pad * 2);
-    i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
-  });
-  ctx.lineTo(pad + (counts.length-1) * step, h);
-  ctx.lineTo(pad, h);
-  ctx.closePath();
-  ctx.fillStyle = grad;
-  ctx.fill();
-
-  ctx.beginPath();
-  counts.forEach((v, i) => {
-    const x = pad + i * step;
-    const y = h - pad - (v / max) * (h - pad * 2);
-    i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
-  });
-  ctx.strokeStyle = '#29d478';
-  ctx.lineWidth = 2.5;
-  ctx.lineJoin = 'round';
-  ctx.stroke();
-}
-
-loadGitHubStats();
-loadCommitGraph();
