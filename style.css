@@ -106,12 +106,7 @@ header {
   justify-content: center;
   align-items: center;
   min-width: 0;
-  overflow-x: auto;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
 }
-.header-nav::-webkit-scrollbar { display: none; }
-
 .header-nav a {
   color: var(--text);
   font-size: 13px;
@@ -127,7 +122,6 @@ header {
   display: flex;
   align-items: center;
   gap: 4px;
-  margin-left: auto;
   flex-shrink: 0;
 }
 
@@ -505,7 +499,6 @@ h2 { font-size: 22px; font-weight: 700; margin-bottom: 8px; letter-spacing: -0.0
 .sns-btn svg { width: 20px; height: 20px; display: block; }
 .sns-btn span { display: none; }
 
-/* ホバー時のみブランド色 */
 .sns-github:hover     { background: #181717; }
 .sns-twitter:hover    { background: #000; }
 .sns-soundcloud:hover { background: #ff5500; }
@@ -515,7 +508,6 @@ h2 { font-size: 22px; font-weight: 700; margin-bottom: 8px; letter-spacing: -0.0
 .sns-telegram:hover   { background: #229ED9; }
 .sns-tiktok:hover     { background: #000; }
 
-/* ライトテーマ */
 :root[data-theme="light"] .sns-btn {
   background: #F5F5F5;
   border-color: #E5E5E5;
@@ -720,39 +712,27 @@ h2 { font-size: 22px; font-weight: 700; margin-bottom: 8px; letter-spacing: -0.0
 }
 
 /* ============================================================
-   Projects / Blogs
+   Projects / Blogs — サムネなし
    ============================================================ */
 .project-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 16px;
+  gap: 12px;
 }
 .project-card {
   background: var(--card-bg);
   border: 1px solid var(--border);
   border-radius: var(--radius);
-  overflow: hidden;
+  padding: 20px;
   transition: border-color 0.2s, transform 0.2s, background 0.3s;
 }
 .project-card:hover { border-color: var(--text); transform: translateY(-2px); }
-.project-card .thumb {
-  width: 100%;
-  height: 150px;
-  background: var(--bg3);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-}
-.project-card .thumb img { width: 100%; height: 100%; object-fit: cover; }
-.project-card .no-img { color: var(--text2); font-size: 12px; }
-.project-card .info { padding: 16px; }
 .project-card h3 { font-size: 15px; font-weight: 600; margin-bottom: 4px; }
 
 .project-date {
   font-size: 11px;
   color: var(--text2);
-  margin-bottom: 6px;
+  margin-bottom: 8px;
   display: flex;
   align-items: center;
   gap: 4px;
@@ -760,7 +740,7 @@ h2 { font-size: 22px; font-weight: 700; margin-bottom: 8px; letter-spacing: -0.0
 .project-date .material-icons { font-size: 13px; }
 .project-card p { color: var(--text2); font-size: 13px; margin-bottom: 12px; line-height: 1.6; }
 
-.tags { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 12px; }
+.tags { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 0; }
 .tag {
   font-size: 11px;
   padding: 3px 8px;
@@ -824,33 +804,21 @@ h2 { font-size: 22px; font-weight: 700; margin-bottom: 8px; letter-spacing: -0.0
 }
 
 /* ============================================================
-   Blogs grid
+   Blogs grid — サムネなし
    ============================================================ */
 .article-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 16px;
+  gap: 12px;
 }
 .article-card {
   background: var(--card-bg);
   border: 1px solid var(--border);
   border-radius: var(--radius);
-  overflow: hidden;
+  padding: 20px;
   transition: border-color 0.2s, transform 0.2s, background 0.3s;
 }
 .article-card:hover { border-color: var(--text); transform: translateY(-2px); }
-.article-card .thumb {
-  width: 100%;
-  height: 150px;
-  background: var(--bg3);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-}
-.article-card .thumb img { width: 100%; height: 100%; object-fit: cover; }
-.article-card .no-img { color: var(--text2); font-size: 12px; }
-.article-card .info { padding: 16px; }
 .article-card h3 { font-size: 15px; font-weight: 600; margin-bottom: 4px; }
 .article-card p { color: var(--text2); font-size: 13px; margin-bottom: 12px; line-height: 1.6; }
 .article-badge {
@@ -862,7 +830,7 @@ h2 { font-size: 22px; font-weight: 700; margin-bottom: 8px; letter-spacing: -0.0
   background: var(--bg3);
   color: var(--text2);
   border: 1px solid var(--border);
-  margin-bottom: 6px;
+  margin-bottom: 8px;
   text-transform: uppercase;
   letter-spacing: 0.06em;
 }
@@ -950,13 +918,34 @@ footer {
    Responsive
    ============================================================ */
 @media (max-width: 640px) {
-  .header-nav a {
-    font-size: 12px;
-    padding: 8px 8px;
+  header { padding: 0 8px; gap: 4px; height: 56px; }
+  .hamburger { width: 36px; height: 36px; padding: 6px; }
+
+  .header-nav {
+    gap: 0;
+    justify-content: center;
   }
-  main { padding-top: 76px; }
+  .header-nav a {
+    font-size: 11.5px;
+    font-weight: 600;
+    padding: 6px 6px;
+    letter-spacing: -0.01em;
+  }
+
+  .header-actions { gap: 0; }
+  .icon-btn { width: 34px; height: 34px; font-size: 18px; }
+
+  main { padding-top: 72px; padding-left: 18px; padding-right: 18px; }
+  section { margin-bottom: 56px; }
   .hero h1 { font-size: 22px; }
 }
+
+@media (max-width: 380px) {
+  .header-nav a { font-size: 11px; padding: 6px 5px; }
+  .icon-btn { width: 32px; height: 32px; }
+  .hero-icon { width: 64px; height: 64px; }
+}
+
 @media (max-width: 500px) {
   .footer-inner { flex-direction: column; }
   .footer-right { text-align: left; }
